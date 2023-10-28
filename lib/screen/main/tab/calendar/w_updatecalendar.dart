@@ -1,44 +1,43 @@
-import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/model/calendar.dart';
-import 'package:fast_app_base/screen/main/tab/calendar/f_calendar.dart';
 import 'package:fast_app_base/viewmodel/calendar_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'event.dart';
-
-class AddCalendarPage extends StatefulWidget {
-
-
+class UpdateCalendar extends StatefulWidget {
+  final Calendar takeCalendar;
   final DateTime initDate;
-  const AddCalendarPage({super.key, required this.initDate});
 
-
+  const UpdateCalendar(
+      {Key? key, required this.takeCalendar, required this.initDate})
+      : super(key: key);
 
   @override
-  State<AddCalendarPage> createState() => _AddCalendarPageState();
+  State<UpdateCalendar> createState() => _UpdateCalendarState();
 }
 
-class _AddCalendarPageState extends State<AddCalendarPage> {
+class _UpdateCalendarState extends State<UpdateCalendar> {
+  String? dTitle;
+
+  String? dContent;
 
   DateTime? selectedDate;
 
   @override
   void initState() {
     super.initState();
-    selectedDate = widget.initDate;
+    selectedDate = widget.takeCalendar.day;
+    dTitle = widget.takeCalendar.title;
+    dContent = widget.takeCalendar.content;
   }
-
-  //Map<DateTime, List<Event>> events = {};
-
 
   @override
   Widget build(BuildContext context) {
-    final title = TextEditingController();
-    final content = TextEditingController();
-
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
+    final calendars = calendarViewModel.calendars;
+
+    final title = TextEditingController(text: widget.takeCalendar.title);
+    final content = TextEditingController(text: widget.takeCalendar.content);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -61,7 +60,6 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                     minimumYear: DateTime.now().year,
                     maximumYear: DateTime.now().year + 1,
                     initialDateTime: widget.initDate,
-
                     onDateTimeChanged: (datetime) {
                       setState(() {
                         selectedDate = datetime;
@@ -108,25 +106,37 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  if (selectedDate != null)
+                    calendarViewModel.updateCalendar(
+                        widget.takeCalendar.key,
+                        Calendar(
+                            day: selectedDate!,
+                            title: title.text,
+                            content: content.text));
 
-                  if(selectedDate != null)
-                  calendarViewModel.addCalendar(Calendar(
-                      day: selectedDate!,
-                      title: title.text,
-                      content: content.text),);
+
+                  // events.addAll({
+                  //   selectedDate!: [Event(title: title.text)]
+                  // });
+                  print('up ${selectedDate}');
+                  Navigator.pop(context, selectedDate);
+                },
+                child: Text('수정'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedDate != null)
+                    calendarViewModel.deleteCalendar(
+                      widget.takeCalendar.key, Calendar(day: selectedDate!, title: dTitle!, content: dContent!)
+                    );
 
                   // events.addAll({
                   //   selectedDate!: [Event(title: title.text)]
                   // });
 
-                  Navigator.pop(context,selectedDate);
-
-                  print('Added C ${selectedDate}');
-
-
-
+                  Navigator.pop(context, selectedDate);
                 },
-                child: Text('등록'),
+                child: Text('삭제'),
               ),
               SizedBox(
                 height: 20,

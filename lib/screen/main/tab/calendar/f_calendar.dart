@@ -1,5 +1,6 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_addcalendar.dart';
+import 'package:fast_app_base/screen/main/tab/calendar/w_updatecalendar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -16,8 +17,7 @@ class CalendarFragment extends StatefulWidget {
 }
 
 class _CalendarFragmentState extends State<CalendarFragment> {
-
-  Map<DateTime, List<Calendar>> events={};
+  Map<DateTime, List<Calendar>> events = {};
   //late final ValueNotifier<List<Event>> selectedEvents;
 
   // List<Object> _getCalendarsForDay(DateTime day){
@@ -34,7 +34,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
   //   return events[day] ?? [];
   // }
 
-  List<Calendar> _getCalendarsForDay(DateTime day){
+  List<Calendar> _getCalendarsForDay(DateTime day) {
     return events[day] ?? [];
   }
 
@@ -51,7 +51,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
   Widget build(BuildContext context) {
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
     final calendars = calendarViewModel.calendars;
-    print('ttttt ${calendarViewModel.events}');
+    //print('ttttt ${calendarViewModel.events}');
     print(selectedDay);
     print(focusedDay);
 
@@ -97,7 +97,11 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                   // calendarViewModel.loadSelectedCalendars(day);
                   // return calendars;
                   return calendarViewModel.events[day] ?? [];
-
+                  // if(selectedDay == day){
+                  //   return calendars;
+                  // }else{
+                  //   return [];
+                  // }
                 },
                 //eventLoader: _getCalendarsForDay,
               ),
@@ -106,37 +110,40 @@ class _CalendarFragmentState extends State<CalendarFragment> {
             Expanded(
               flex: 2,
               child: Container(
-                child: calendars.length == 0 ? Center(child: Text("일정이 없습니다."),):
-                ListView.builder(
-                  itemBuilder: (BuildContext context, index) {
-
-
+                child: calendars.length == 0
+                    ? Center(
+                        child: Text("일정이 없습니다."),
+                      )
+                    : ListView.builder(
+                        itemBuilder: (BuildContext context, index) {
                           return Card(
                             child: GestureDetector(
                               onTap: () {
-                                print(calendars[index].day);
-                                print(selectedDay);
+                                Nav.push(UpdateCalendar(
+                                  takeCalendar: calendars[index],
+                                  initDate: selectedDay,
+                                ));
                               },
-                              child:
-                              ListTile(
+                              child: ListTile(
                                 title: Text(calendars[index].title),
                               ),
                             ),
                           );
-
-                  },
-                  itemCount: calendars.length,
-                ),
+                        },
+                        itemCount: calendars.length,
+                      ),
               ),
             ),
             IconButton(
               onPressed: () async {
                 await Nav.push(AddCalendarPage(
                   initDate: selectedDay,
-                )).then((value) { setState(() {
-                  selectedDay = value;
-                  calendarViewModel.loadSelectedCalendars(selectedDay);
-                });});
+                )).then((value) {
+                  setState(() {
+                    selectedDay = value;
+                    calendarViewModel.loadSelectedCalendars(selectedDay);
+                  });
+                });
 
                 // setState(() {
                 //   focusedDay = returnDay;
@@ -151,7 +158,9 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 color: Colors.blue,
               ),
             ),
-            SizedBox(height: 25,),
+            SizedBox(
+              height: 25,
+            ),
           ],
         ),
       ),

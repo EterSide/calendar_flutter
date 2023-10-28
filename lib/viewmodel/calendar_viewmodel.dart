@@ -10,11 +10,12 @@ class CalendarViewModel extends ChangeNotifier {
   late Box<Calendar> _CalendarBox;
 
   List<Calendar> _calendars = [];
-  Map<DateTime, List<Calendar>> _events = {};
-
-
-
   List<Calendar> get calendars => _calendars;
+
+  List<Calendar> _acalendars = [];
+  List<Calendar> get acalendars => _acalendars;
+
+  Map<DateTime, List<Calendar>> _events = {};
   Map<DateTime, List<Calendar>> get events => _events;
 
   CalendarViewModel() {
@@ -47,9 +48,12 @@ class CalendarViewModel extends ChangeNotifier {
             element.day.day == now.day)
         .toList();
 
+
+
     print(calendarList);
 
     _calendars = calendarList;
+
 
     notifyListeners();
   }
@@ -65,8 +69,30 @@ class CalendarViewModel extends ChangeNotifier {
   }
 
   //메모 삭제하는 함수
+  Future<void> deleteCalendar(int key, Calendar calendar) async {
+    await _CalendarBox.delete(key);
+
+    await _allCalendarsQ();
+
+    await loadSelectedCalendars(calendar.day);
+
+    notifyListeners();
+  }
 
   //메모 수정하는 함수
+
+  Future<void> updateCalendar(int key ,Calendar calendar) async {
+    print('${calendar.day} + ${calendar.title} + ${calendar.content}');
+
+    await _CalendarBox.put(key, calendar);
+
+    await loadSelectedCalendars(calendar.day);
+
+    await _allCalendarsQ();
+
+    notifyListeners();
+
+  }
 
   //누른 날짜의 일정 가져오기
   Future<void> loadSelectedCalendars(DateTime day) async {
@@ -74,13 +100,15 @@ class CalendarViewModel extends ChangeNotifier {
         .where((element) => element.day == day)
         .toList();
 
+    final acalendarList = await _CalendarBox.values.toList();
+    _acalendars = acalendarList;
     _calendars = calendarList;
 
     notifyListeners();
   }
 
   Future<void> _allCalendarsQ() async {
-    print('_allC');
+
     final calendarList = await _CalendarBox.values.toList();
     Map<DateTime, List<Calendar>> aaa = {};
 
@@ -93,9 +121,10 @@ class CalendarViewModel extends ChangeNotifier {
 
     }
     _events = aaa;
-    print(aaa);
     notifyListeners();
 
 
   }
+
+
 }
