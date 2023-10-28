@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../model/calendar.dart';
 import '../../../../viewmodel/calendar_viewmodel.dart';
+import 'event.dart';
 
 class CalendarFragment extends StatefulWidget {
   const CalendarFragment({super.key});
@@ -15,6 +16,28 @@ class CalendarFragment extends StatefulWidget {
 }
 
 class _CalendarFragmentState extends State<CalendarFragment> {
+
+  Map<DateTime, List<Calendar>> events={};
+  //late final ValueNotifier<List<Event>> selectedEvents;
+
+  // List<Object> _getCalendarsForDay(DateTime day){
+  //    return events[day] ?? [];
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  // List<Event> getEventsForDay(DateTime day) {
+  //   return events[day] ?? [];
+  // }
+
+  List<Calendar> _getCalendarsForDay(DateTime day){
+    return events[day] ?? [];
+  }
+
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -28,6 +51,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
   Widget build(BuildContext context) {
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
     final calendars = calendarViewModel.calendars;
+    print('ttttt ${calendarViewModel.events}');
     print(selectedDay);
     print(focusedDay);
 
@@ -58,12 +82,24 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                     this.selectedDay = selectedDay;
                     this.focusedDay = focusedDay;
                     calendarViewModel.loadSelectedCalendars(selectedDay);
+                    //print('test ===== ${calendars[0].day}');
                     print(selectedDay);
                   });
                 },
                 selectedDayPredicate: (DateTime day) {
                   return isSameDay(selectedDay, day);
                 },
+                headerStyle: HeaderStyle(
+                  formatButtonVisible: false,
+                ),
+                eventLoader: (day) {
+                  //{10월12,[1,23]}
+                  // calendarViewModel.loadSelectedCalendars(day);
+                  // return calendars;
+                  return calendarViewModel.events[day] ?? [];
+
+                },
+                //eventLoader: _getCalendarsForDay,
               ),
             ),
             Line(),
@@ -108,7 +144,6 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 //   print('return :  ${focusedDay}');
                 //   calendarViewModel.loadSelectedCalendars(focusedDay);
                 // });
-
               },
               icon: Icon(
                 Icons.add_circle_rounded,

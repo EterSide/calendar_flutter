@@ -1,3 +1,4 @@
+import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/dart/extension/datetime_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -9,8 +10,12 @@ class CalendarViewModel extends ChangeNotifier {
   late Box<Calendar> _CalendarBox;
 
   List<Calendar> _calendars = [];
+  Map<DateTime, List<Calendar>> _events = {};
+
+
 
   List<Calendar> get calendars => _calendars;
+  Map<DateTime, List<Calendar>> get events => _events;
 
   CalendarViewModel() {
     _openCalendarBox();
@@ -28,13 +33,18 @@ class CalendarViewModel extends ChangeNotifier {
     _CalendarBox = Hive.box<Calendar>('calendars');
 
     await _loadCalendars();
+    await _allCalendarsQ();
   }
+
+
 
   Future<void> _loadCalendars() async {
     DateTime now = DateTime.now();
-    final calendarList = await _CalendarBox.values.where((element) =>
-    element.day.year == now.year && element.day.month == now.month && element.day.day == now.day
-    )
+    final calendarList = await _CalendarBox.values
+        .where((element) =>
+            element.day.year == now.year &&
+            element.day.month == now.month &&
+            element.day.day == now.day)
         .toList();
 
     print(calendarList);
@@ -49,6 +59,7 @@ class CalendarViewModel extends ChangeNotifier {
     await _CalendarBox.add(calendar);
 
     await loadSelectedCalendars(calendar.day);
+    await _allCalendarsQ();
 
     notifyListeners();
   }
@@ -62,10 +73,29 @@ class CalendarViewModel extends ChangeNotifier {
     final calendarList = await _CalendarBox.values
         .where((element) => element.day == day)
         .toList();
-    print(calendarList);
 
     _calendars = calendarList;
 
     notifyListeners();
+  }
+
+  Future<void> _allCalendarsQ() async {
+    print('_allC');
+    final calendarList = await _CalendarBox.values.toList();
+    Map<DateTime, List<Calendar>> aaa = {};
+
+    for (int i = 0; i < calendarList.length; i++) {
+      if(aaa.keysList().contains(calendarList[i].day)){
+        aaa[calendarList[i].day]?.add(calendarList[i]);
+      }else{
+        aaa[calendarList[i].day] = [calendarList[i]];
+      }
+
+    }
+    _events = aaa;
+    print(aaa);
+    notifyListeners();
+
+
   }
 }

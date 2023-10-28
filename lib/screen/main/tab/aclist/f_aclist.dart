@@ -7,13 +7,43 @@ class ACFragment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('목록',
+        title: Text(
+          '목록',
           style: TextStyle(color: Colors.white),
-         ),
+        ),
         backgroundColor: Colors.lightBlue,
       ),
-      body: Container(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Expanded(
+            flex: 8,
+            child: Container(
+              child: Center(
+                child: Text("일정이 없습니다."),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: IconButton(
+              onPressed: () async {
 
+                // setState(() {
+                //   focusedDay = returnDay;
+                //   selectedDay = returnDay;
+                //   print('return :  ${focusedDay}');
+                //   calendarViewModel.loadSelectedCalendars(focusedDay);
+                // });
+              },
+              icon: Icon(
+                Icons.add_circle_rounded,
+                size: 50,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

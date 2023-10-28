@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'event.dart';
+
 class AddCalendarPage extends StatefulWidget {
 
 
@@ -28,6 +30,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
     selectedDate = widget.initDate;
   }
 
+  //Map<DateTime, List<Event>> events = {};
 
 
   @override
@@ -114,6 +117,11 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                       content: content.text),);
                   print('목록 = ${calendarViewModel.calendars}');
                   print('selectedDate = ${selectedDate}');
+
+                  // events.addAll({
+                  //   selectedDate!: [Event(title: title.text)]
+                  // });
+
                   Navigator.pop(context,selectedDate);
 
 
