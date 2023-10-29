@@ -60,7 +60,8 @@ class CalendarViewModel extends ChangeNotifier {
   //메모 저장하는 함수
 
   Future<void> addCalendar(Calendar calendar) async {
-    await _CalendarBox.add(calendar);
+    await _CalendarBox.add(Calendar(day: DateTime(calendar.day.year,calendar.day.month,calendar.day.day),
+        title: calendar.title, content: calendar.content));
     print('addCalendar ${calendar.day} + ${calendar.title} + ${calendar.content}');
 
     await loadSelectedCalendars(calendar.day);
@@ -126,7 +127,6 @@ class CalendarViewModel extends ChangeNotifier {
 
     }
 
-    print(aaa);
     _events = aaa;
     notifyListeners();
 
