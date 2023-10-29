@@ -111,6 +111,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
 
                   if(selectedDate != null)
                   calendarViewModel.addCalendar(Calendar(
+                      //day: selectedDate!,
                       day: selectedDate!,
                       title: title.text,
                       content: content.text),);
@@ -121,7 +122,7 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
 
                   Navigator.pop(context,selectedDate);
 
-                  print('Added C ${selectedDate}');
+                  print('Added C ${DateTime(selectedDate!.year,selectedDate!.month,selectedDate!.day).toUtc()}');
 
 
 
