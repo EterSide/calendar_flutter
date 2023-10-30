@@ -1,11 +1,14 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_addcalendar.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_updatecalendar.dart';
+import 'package:fast_app_base/viewmodel/category_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../model/calendar.dart';
+import '../../../../model/category.dart';
 import '../../../../viewmodel/calendar_viewmodel.dart';
 import 'event.dart';
 
@@ -51,26 +54,38 @@ class _CalendarFragmentState extends State<CalendarFragment> {
   Widget build(BuildContext context) {
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
     final calendars = calendarViewModel.calendars;
-    //print('ttttt ${calendarViewModel.events}');
-    // print(selectedDay);
-    // print(focusedDay);
+    final categories = Provider.of<CategoryViewModel>(context);
+    final categoryList = categories.categorys;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '달력',
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.lightBlue,
-      ),
       body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              flex: 3,
-              child: TableCalendar(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+
+              //horizontal scroll view
+
+              TableCalendar(
+                calendarFormat: CalendarFormat.month,
+                calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.lightBlue,
+                    shape: BoxShape.circle,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    color: Colors.lightBlue.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  selectedTextStyle: TextStyle(color: Colors.white),
+                  todayTextStyle: TextStyle(color: Colors.white),
+                  weekendTextStyle: TextStyle(color: Colors.red),
+                  defaultTextStyle: TextStyle(color: Colors.black),
+                  outsideTextStyle: TextStyle(color: Colors.grey),
+                  outsideDaysVisible: false,
+                  canMarkersOverflow: true,
+                ),
                 rowHeight: 42,
                 weekNumbersVisible: false,
                 locale: 'ko_KR',
@@ -92,84 +107,100 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                   formatButtonVisible: false,
                 ),
                 eventLoader: (day) {
-                  //{10월12,[1,23]}
-                  // calendarViewModel.loadSelectedCalendars(day);
-                  // return calendars;
                   return calendarViewModel.events[DateTime(day.year,day.month,day.day)] ?? [];
-                  // if(selectedDay == day){
-                  //   return calendars;
-                  // }else{
-                  //   return [];
-                  // }
+
                 },
                 //eventLoader: _getCalendarsForDay,
               ),
-            ),
-            Line(),
-            Expanded(
-              flex: 2,
-              child: Container(
-                child: calendars.length == 0
-                    ? Center(
-                        child: Text("일정이 없습니다."),
-                      )
-                    : ListView.builder(
-                        itemBuilder: (BuildContext context, index) {
-                          return Card(
-                            child: GestureDetector(
-                              onTap: () async {
-                                await Nav.push(UpdateCalendar(
-                                  takeCalendar: calendars[index],
-                                  initDate: selectedDay,
-                                )).then((value) {
-                                  setState(() {
-                                    selectedDay = value;
-                                    print("------------------");
-                                    print(value);
-                                    calendarViewModel.loadSelectedCalendars(selectedDay);
-                                    print(calendars.length);
+              Line(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Container(
+                  height: 30,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categoryList.length,
+                    itemBuilder: (context, index) {
 
-                                  });
-                                });
-                              },
-                              child: ListTile(
-                                title: Text(calendars[index].title),
+                      return Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                //DB에 저장된 색상 코드를 가져와서 변환하여 적용
+                                color: Color(int.parse(categoryList[index].color.replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
+                                shape: BoxShape.circle,
                               ),
                             ),
-                          );
-                        },
-                        itemCount: calendars.length,
-                      ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(categoryList[index].name),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () async {
-                await Nav.push(AddCalendarPage(
-                  initDate: selectedDay,
-                )).then((value) {
-                  setState(() {
-                    selectedDay = value;
-                    calendarViewModel.loadSelectedCalendars(selectedDay);
-                  });
-                });
 
-                // setState(() {
-                //   focusedDay = returnDay;
-                //   selectedDay = returnDay;
-                //   print('return :  ${focusedDay}');
-                //   calendarViewModel.loadSelectedCalendars(focusedDay);
-                // });
-              },
-              icon: Icon(
-                Icons.add_circle_rounded,
-                size: 50,
-                color: Colors.blue,
+              Flexible(
+                child: Container(
+                  child: calendars.length == 0
+                      ? Center(
+                          child: Text("일정이 없습니다."),
+                        )
+                      : ListView.builder(
+                          itemBuilder: (BuildContext context, index) {
+                            return Card(
+                              color: Color(int.parse(categories.getColorFromCategoryKey(calendars[index].categoryId).replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await Nav.push(UpdateCalendar(
+                                    takeCalendar: calendars[index],
+                                    initDate: selectedDay,
+                                  )).then((value) {
+                                    setState(() {
+                                      selectedDay = value;
+                                    });
+                                  });
+                                },
+                                child: ListTile(
+                                  title: Text(calendars[index].title),
+                                ),
+                              ),
+                            );
+                          },
+                          itemCount: calendars.length,
+                        ),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-          ],
+
+              IconButton(
+                onPressed: () async {
+                  await Nav.push(AddCalendarPage(
+                    initDate: selectedDay,
+                  )).then((value) {
+                    setState(() {
+                      selectedDay = value;
+                      calendarViewModel.loadSelectedCalendars(selectedDay);
+                    });
+                  });
+                },
+                icon: Icon(
+                  Icons.add_circle_rounded,
+                  size: 50,
+                  color: Colors.blue,
+                ),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+            ],
+          ),
         ),
       ),
     );
