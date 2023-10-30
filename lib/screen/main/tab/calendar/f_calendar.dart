@@ -156,7 +156,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                       : ListView.builder(
                           itemBuilder: (BuildContext context, index) {
                             return Card(
-                              color: Color(int.parse(categories.getColorFromCategoryKey(calendars[index].categoryId).replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
+                              color: calendars[index].categoryId==-1 ? Colors.white: Color(int.parse(categories.getColorFromCategoryKey(calendars[index].categoryId).replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
                               child: GestureDetector(
                                 onTap: () async {
                                   await Nav.push(UpdateCalendar(
