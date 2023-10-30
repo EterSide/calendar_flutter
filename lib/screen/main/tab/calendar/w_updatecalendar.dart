@@ -63,7 +63,6 @@ class _UpdateCalendarState extends State<UpdateCalendar> {
                     onDateTimeChanged: (datetime) {
                       setState(() {
                         selectedDate = datetime;
-                        print(selectedDate);
                       });
                     },
                     mode: CupertinoDatePickerMode.date,
@@ -118,7 +117,7 @@ class _UpdateCalendarState extends State<UpdateCalendar> {
                   // events.addAll({
                   //   selectedDate!: [Event(title: title.text)]
                   // });
-                  print('up ${selectedDate}');
+                  print('update ${selectedDate}');
                   Navigator.pop(context, selectedDate);
                 },
                 child: Text('수정'),

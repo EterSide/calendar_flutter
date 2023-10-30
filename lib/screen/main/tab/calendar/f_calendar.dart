@@ -52,8 +52,8 @@ class _CalendarFragmentState extends State<CalendarFragment> {
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
     final calendars = calendarViewModel.calendars;
     //print('ttttt ${calendarViewModel.events}');
-    print(selectedDay);
-    print(focusedDay);
+    // print(selectedDay);
+    // print(focusedDay);
 
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +82,6 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                     this.selectedDay = selectedDay;
                     this.focusedDay = focusedDay;
                     calendarViewModel.loadSelectedCalendars(selectedDay);
-                    //print('test ===== ${calendars[0].day}');
                     print(selectedDay);
                   });
                 },
@@ -96,7 +95,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                   //{10월12,[1,23]}
                   // calendarViewModel.loadSelectedCalendars(day);
                   // return calendars;
-                  return calendarViewModel.events[day] ?? [];
+                  return calendarViewModel.events[DateTime(day.year,day.month,day.day)] ?? [];
                   // if(selectedDay == day){
                   //   return calendars;
                   // }else{
@@ -118,11 +117,20 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                         itemBuilder: (BuildContext context, index) {
                           return Card(
                             child: GestureDetector(
-                              onTap: () {
-                                Nav.push(UpdateCalendar(
+                              onTap: () async {
+                                await Nav.push(UpdateCalendar(
                                   takeCalendar: calendars[index],
                                   initDate: selectedDay,
-                                ));
+                                )).then((value) {
+                                  setState(() {
+                                    selectedDay = value;
+                                    print("------------------");
+                                    print(value);
+                                    calendarViewModel.loadSelectedCalendars(selectedDay);
+                                    print(calendars.length);
+
+                                  });
+                                });
                               },
                               child: ListTile(
                                 title: Text(calendars[index].title),
