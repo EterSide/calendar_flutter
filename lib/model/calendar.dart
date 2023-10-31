@@ -13,9 +13,13 @@ class Calendar extends HiveObject {
   @HiveField(2)
   String content;
 
+  @HiveField(3)
+  int categoryId;
+
   Calendar({
     required this.day,
     required this.title,
     required this.content,
+    this.categoryId = -1
   });
 }
