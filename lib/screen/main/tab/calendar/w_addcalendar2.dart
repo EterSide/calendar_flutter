@@ -21,6 +21,9 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
   DateTime? selectedDate;
   int? selectKey;
   Colors? selectColor;
+  //카테고리를 변경할 때 마다, 이것도 다시 빌드 되면서, 텍스트가 사라지기 때문에, 위로 올렸음
+  final title = TextEditingController();
+  final content = TextEditingController();
 
   @override
   void initState() {
@@ -32,8 +35,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
 
   @override
   Widget build(BuildContext context) {
-    final title = TextEditingController();
-    final content = TextEditingController();
+
     final categories = Provider.of<CategoryViewModel>(context);
     final categoryList = categories.categorys;
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
@@ -104,6 +106,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                                 // setState를 써야, 버튼을 누를떄 마다, 다시 빌드가 되면서, 컬러부분의 색상이 변경된다.
                             setState(() {
                               selectKey = categoryList[index].key;
+                              title.text = title.text;
                             });
 
                             print(selectKey);
