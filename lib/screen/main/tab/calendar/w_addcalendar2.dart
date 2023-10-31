@@ -69,7 +69,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
               ),
               SizedBox(height: 10,),
               Container(
-                height: 100,
+                height: 80,
                 child: TextField(
                   controller: title,
                   decoration: InputDecoration(
@@ -93,34 +93,56 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                       child: Row(
                         children: [
                           Container(
-                            width: 20,
-                            height: 30,
+                            padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              //DB에 저장된 색상 코드를 가져와서 변환하여 적용
-                              color: Color(int.parse(
-                                      categoryList[index]
-                                          .color
-                                          .replaceFirst("#", ""),
-                                      radix: 16))
-                                  .withOpacity(1.0),
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(20),
+                              //3항 연산자 써서 색깔 바꾸기
+                              color: selectKey == categoryList[index].key ? Colors.grey.shade400 : Colors.grey.shade200,
                             ),
                             child: GestureDetector(
                               onTap: (){
-                                selectKey = categoryList[index].key;
-                                print(selectKey);
-                              },
+                                // setState를 써야, 버튼을 누를떄 마다, 다시 빌드가 되면서, 컬러부분의 색상이 변경된다.
+                            setState(() {
+                              selectKey = categoryList[index].key;
+                            });
+
+                            print(selectKey);
+
+                            },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 20,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      //DB에 저장된 색상 코드를 가져와서 변환하여 적용
+                                      color: Color(int.parse(
+                                              categoryList[index]
+                                                  .color
+                                                  .replaceFirst("#", ""),
+                                              radix: 16))
+                                          .withOpacity(1.0),
+                                      shape: BoxShape.circle,
+                                    ),
+
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(categoryList[index].name),
+                                ],
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(categoryList[index].name),
+
                         ],
                       ),
                     );
                   },
                 ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               Container(
                 height: 300,
