@@ -27,8 +27,8 @@ class CategoryViewModel extends ChangeNotifier {
   }
 
   Future<void> _openCategoryBox() async {
-    await Hive.openBox<Category>('category');
-    _CategoryBox = Hive.box<Category>('category');
+    await Hive.openBox<Category>('categorys');
+    _CategoryBox = Hive.box<Category>('categorys');
 
     await _loadCategory();
   }

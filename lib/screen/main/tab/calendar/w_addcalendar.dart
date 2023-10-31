@@ -10,19 +10,14 @@ import '../../../../viewmodel/category_viewmodel.dart';
 import 'event.dart';
 
 class AddCalendarPage extends StatefulWidget {
-
-
   final DateTime initDate;
   const AddCalendarPage({super.key, required this.initDate});
-
-
 
   @override
   State<AddCalendarPage> createState() => _AddCalendarPageState();
 }
 
 class _AddCalendarPageState extends State<AddCalendarPage> {
-
   DateTime? selectedDate;
 
   @override
@@ -32,7 +27,6 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
   }
 
   //Map<DateTime, List<Event>> events = {};
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +56,6 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                   minimumYear: DateTime.now().year,
                   maximumYear: DateTime.now().year + 1,
                   initialDateTime: widget.initDate,
-
                   onDateTimeChanged: (datetime) {
                     setState(() {
                       selectedDate = datetime;
@@ -73,56 +66,54 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
                 ),
               ),
             ),
-            Expanded(
-              child: Container(
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: title,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        labelText: '제목',
-                        hintText: '제목을 작성해주세요',
-                      ),
-                    ),
-                  ],
+            Column(
+              children: [
+                TextField(
+                  controller: title,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    labelText: '제목',
+                    hintText: '제목을 작성해주세요',
+                  ),
                 ),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categoryList.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            //DB에 저장된 색상 코드를 가져와서 변환하여 적용
+                            color: Color(int.parse(
+                                    categoryList[index]
+                                        .color
+                                        .replaceFirst("#", ""),
+                                    radix: 16))
+                                .withOpacity(1.0),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(categoryList[index].name),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
             Expanded(
-                child: Container(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categoryList.length,
-                    itemBuilder: (context, index) {
-
-                      return Container(
-                        margin: EdgeInsets.only(left: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                //DB에 저장된 색상 코드를 가져와서 변환하여 적용
-                                color: Color(int.parse(categoryList[index].color.replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(categoryList[index].name),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            ),
-            Expanded(
-              flex:6,
+              flex: 6,
               child: TextField(
                 controller: content,
                 maxLines: null,
@@ -139,26 +130,25 @@ class _AddCalendarPageState extends State<AddCalendarPage> {
             ),
             ElevatedButton(
               onPressed: () {
-
-                if(selectedDate != null)
-                calendarViewModel.addCalendar(Calendar(
-                    //day: selectedDate!,
-                    day: selectedDate!,
-                    title: title.text,
-                    content: content.text,
-                  categoryId: categoryList[1].key,
-                ),);
+                if (selectedDate != null)
+                  calendarViewModel.addCalendar(
+                    Calendar(
+                      //day: selectedDate!,
+                      day: selectedDate!,
+                      title: title.text,
+                      content: content.text,
+                      categoryId: categoryList[1].key,
+                    ),
+                  );
 
                 // events.addAll({
                 //   selectedDate!: [Event(title: title.text)]
                 // });
 
-                Navigator.pop(context,selectedDate);
+                Navigator.pop(context, selectedDate);
 
-                print('Added C ${DateTime(selectedDate!.year,selectedDate!.month,selectedDate!.day).toUtc()}');
-
-
-
+                print(
+                    'Added C ${DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day).toUtc()}');
               },
               child: Text('등록'),
             ),

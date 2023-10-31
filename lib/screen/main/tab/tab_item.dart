@@ -2,6 +2,7 @@ import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/screen/main/tab/aclist/f_aclist.dart';
 import 'package:fast_app_base/screen/main/tab/alarm/f_alarm.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/f_calendar.dart';
+import 'package:fast_app_base/screen/main/tab/category/f_category.dart';
 import 'package:fast_app_base/screen/main/tab/favorite/f_favorite.dart';
 import 'package:fast_app_base/screen/main/tab/home/f_home.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ enum TabItem {
   favorite(Icons.star, '즐겨찾기', FavoriteFragment(isShowBackButton: false)),
   calendar(Icons.calendar_month, '달력', CalendarFragment()),
   alarm(Icons.alarm, '알람', AlarmFragment()),
-  aclist(Icons.list, '목록', ACFragment());
+  aclist(Icons.list, '목록', ACFragment()),
+  category(Icons.category, '카테고리', CategoryFragment());
 
   final IconData activeIcon;
   final IconData inActiveIcon;

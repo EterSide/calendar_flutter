@@ -14,7 +14,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   TabItem _currentTab = TabItem.calendar;
-  final tabs = [TabItem.calendar, TabItem.alarm, TabItem.aclist];
+  final tabs = [TabItem.calendar, TabItem.alarm, TabItem.aclist, TabItem.category];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
   int get _currentIndex => tabs.indexOf(_currentTab);

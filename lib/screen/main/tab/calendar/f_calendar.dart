@@ -1,5 +1,6 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_addcalendar.dart';
+import 'package:fast_app_base/screen/main/tab/calendar/w_addcalendar2.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_updatecalendar.dart';
 import 'package:fast_app_base/viewmodel/category_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,23 @@ class _CalendarFragmentState extends State<CalendarFragment> {
     final categoryList = categories.categorys;
 
     return Scaffold(
+      floatingActionButton: IconButton(
+        onPressed: () async {
+          await Nav.push(AddCalendarPage2(
+            initDate: selectedDay,
+          )).then((value) {
+            setState(() {
+              selectedDay = value;
+              calendarViewModel.loadSelectedCalendars(selectedDay);
+            });
+          });
+        },
+        icon: Icon(
+          Icons.add_circle_rounded,
+          size: 50,
+          color: Colors.blue,
+        ),
+      ),
       body: Container(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -106,6 +124,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 headerStyle: HeaderStyle(
                   formatButtonVisible: false,
                 ),
+
                 eventLoader: (day) {
                   return calendarViewModel.events[DateTime(day.year,day.month,day.day)] ?? [];
 
@@ -179,26 +198,8 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 ),
               ),
 
-              IconButton(
-                onPressed: () async {
-                  await Nav.push(AddCalendarPage(
-                    initDate: selectedDay,
-                  )).then((value) {
-                    setState(() {
-                      selectedDay = value;
-                      calendarViewModel.loadSelectedCalendars(selectedDay);
-                    });
-                  });
-                },
-                icon: Icon(
-                  Icons.add_circle_rounded,
-                  size: 50,
-                  color: Colors.blue,
-                ),
-              ),
-              SizedBox(
-                height: 25,
-              ),
+
+
             ],
           ),
         ),
