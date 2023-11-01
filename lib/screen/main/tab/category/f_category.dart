@@ -1,4 +1,5 @@
 import 'package:fast_app_base/screen/main/tab/calendar/f_calendar.dart';
+import 'package:fast_app_base/viewmodel/calendar_viewmodel.dart';
 import 'package:fast_app_base/viewmodel/category_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,9 @@ class CategoryFragment extends StatelessWidget {
     final categoryViewModel = Provider.of<CategoryViewModel>(context);
     final categorys = categoryViewModel.categorys;
 
+    final calendarViewModel = Provider.of<CalendarViewModel>(context);
+    final calendars = calendarViewModel.scalendars;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('카테고리 생성'),
@@ -26,9 +30,12 @@ class CategoryFragment extends StatelessWidget {
               child: Text('카테고리 생성')),
           ElevatedButton(
               onPressed: () {
-                print(categorys[0].color);
+                calendarViewModel.selectCategory(-1);
+                print(calendars);
               },
               child: Text('카테고리 출력')),
+
+
           Container(
             height: 50,
             child: ListView.builder(

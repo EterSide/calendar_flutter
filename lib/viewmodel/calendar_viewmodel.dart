@@ -15,6 +15,9 @@ class CalendarViewModel extends ChangeNotifier {
   List<Calendar> _acalendars = [];
   List<Calendar> get acalendars => _acalendars;
 
+  List<Calendar> _scalendars = [];
+  List<Calendar> get scalendars => _scalendars;
+
   Map<DateTime, List<Calendar>> _events = {};
   Map<DateTime, List<Calendar>> get events => _events;
 
@@ -35,8 +38,18 @@ class CalendarViewModel extends ChangeNotifier {
 
     await _loadCalendars();
     await _allCalendarsQ();
+    await _loadAllCalendars();
   }
 
+  Future<void> _loadAllCalendars() async {
+
+    final allCalendarList = await _CalendarBox.values.toList();
+
+    _acalendars = allCalendarList;
+
+    notifyListeners();
+
+  }
 
 
   Future<void> _loadCalendars() async {
@@ -48,24 +61,27 @@ class CalendarViewModel extends ChangeNotifier {
             element.day.day == now.day)
         .toList();
 
-
-
     print(calendarList);
 
     _calendars = calendarList;
-
 
     notifyListeners();
   }
   //메모 저장하는 함수
 
   Future<void> addCalendar(Calendar calendar) async {
-    await _CalendarBox.add(Calendar(day: DateTime(calendar.day.year,calendar.day.month,calendar.day.day),
-        title: calendar.title, content: calendar.content, categoryId: calendar.categoryId));
-    print('addCalendar ${calendar.day} + ${calendar.title} + ${calendar.content}');
+    await _CalendarBox.add(Calendar(
+        day: DateTime(calendar.day.year, calendar.day.month, calendar.day.day),
+        title: calendar.title,
+        content: calendar.content,
+        categoryId: calendar.categoryId));
+    print(
+        'addCalendar ${calendar.day} + ${calendar.title} + ${calendar.content}');
 
     await loadSelectedCalendars(calendar.day);
     await _allCalendarsQ();
+
+    await selectCategory(calendar.categoryId);
 
     notifyListeners();
   }
@@ -78,12 +94,13 @@ class CalendarViewModel extends ChangeNotifier {
 
     await loadSelectedCalendars(calendar.day);
 
+
     notifyListeners();
   }
 
   //메모 수정하는 함수
 
-  Future<void> updateCalendar(int key ,Calendar calendar) async {
+  Future<void> updateCalendar(int key, Calendar calendar) async {
     print('view Up ${calendar.day} + ${calendar.title} + ${calendar.content}');
 //업데이트 완료 후, 포커스를 바뀐 날짜로 바꾸던지
 //아니면 기존 날짜의 일정을 다시 불러오던지
@@ -93,15 +110,15 @@ class CalendarViewModel extends ChangeNotifier {
     await _allCalendarsQ();
 
     notifyListeners();
-
   }
 
   //누른 날짜의 일정 가져오기
   Future<void> loadSelectedCalendars(DateTime day) async {
     final calendarList = await _CalendarBox.values
-        .where((element) => element.day.year == day.year &&
-        element.day.month == day.month &&
-        element.day.day == day.day)
+        .where((element) =>
+            element.day.year == day.year &&
+            element.day.month == day.month &&
+            element.day.day == day.day)
         .toList();
     print('---------loadSelectedCalendars---------');
     print(calendarList);
@@ -114,24 +131,31 @@ class CalendarViewModel extends ChangeNotifier {
   }
 
   Future<void> _allCalendarsQ() async {
-
     final calendarList = await _CalendarBox.values.toList();
     Map<DateTime, List<Calendar>> aaa = {};
 
     for (int i = 0; i < calendarList.length; i++) {
-      if(aaa.keysList().contains(DateTime(calendarList[i].day.year,calendarList[i].day.month,calendarList[i].day.day))){
+      if (aaa.keysList().contains(DateTime(calendarList[i].day.year,
+          calendarList[i].day.month, calendarList[i].day.day))) {
         aaa[calendarList[i].day]?.add(calendarList[i]);
-      }else{
-        aaa[DateTime(calendarList[i].day.year,calendarList[i].day.month,calendarList[i].day.day)] = [calendarList[i]];
+      } else {
+        aaa[DateTime(calendarList[i].day.year, calendarList[i].day.month,
+            calendarList[i].day.day)] = [calendarList[i]];
       }
-
     }
 
     _events = aaa;
     notifyListeners();
-
-
   }
 
+  Future<void> selectCategory(int getCategoryId) async {
+    final selectList = await _CalendarBox.values
+        .where((element) => element.categoryId == getCategoryId)
+        .toList();
 
+    _scalendars = selectList;
+
+    notifyListeners();
+
+  }
 }

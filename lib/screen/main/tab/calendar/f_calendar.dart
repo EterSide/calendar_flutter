@@ -82,7 +82,6 @@ class _CalendarFragmentState extends State<CalendarFragment> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-
               //horizontal scroll view
 
               TableCalendar(
@@ -126,8 +125,9 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 ),
 
                 eventLoader: (day) {
-                  return calendarViewModel.events[DateTime(day.year,day.month,day.day)] ?? [];
-
+                  return calendarViewModel
+                          .events[DateTime(day.year, day.month, day.day)] ??
+                      [];
                 },
                 //eventLoader: _getCalendarsForDay,
               ),
@@ -140,7 +140,6 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                     scrollDirection: Axis.horizontal,
                     itemCount: categoryList.length,
                     itemBuilder: (context, index) {
-
                       return Container(
                         margin: EdgeInsets.only(left: 10),
                         child: Row(
@@ -150,7 +149,12 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                               height: 20,
                               decoration: BoxDecoration(
                                 //DB에 저장된 색상 코드를 가져와서 변환하여 적용
-                                color: Color(int.parse(categoryList[index].color.replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
+                                color: Color(int.parse(
+                                        categoryList[index]
+                                            .color
+                                            .replaceFirst("#", ""),
+                                        radix: 16))
+                                    .withOpacity(1.0),
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -175,7 +179,15 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                       : ListView.builder(
                           itemBuilder: (BuildContext context, index) {
                             return Card(
-                              color: calendars[index].categoryId==-1 ? Colors.white: Color(int.parse(categories.getColorFromCategoryKey(calendars[index].categoryId).replaceFirst("#", ""), radix: 16)).withOpacity(1.0),
+                              color: calendars[index].categoryId == -1
+                                  ? Colors.white
+                                  : Color(int.parse(
+                                          categories
+                                              .getColorFromCategoryKey(
+                                                  calendars[index].categoryId)
+                                              .replaceFirst("#", ""),
+                                          radix: 16))
+                                      .withOpacity(1.0),
                               child: GestureDetector(
                                 onTap: () async {
                                   await Nav.push(UpdateCalendar(
@@ -197,9 +209,6 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                         ),
                 ),
               ),
-
-
-
             ],
           ),
         ),
