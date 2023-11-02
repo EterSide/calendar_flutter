@@ -111,7 +111,7 @@ class _ACFragmentState extends State<ACFragment> {
                             return Card(
                               child: GestureDetector(
                                 onTap: () {
-                                  Nav.push(UpdateCalendar(
+                                  Nav.push(updateCalendar(
                                     takeCalendar: acalendars[index],
                                     initDate: acalendars[index].day,
                                   ));
@@ -130,7 +130,7 @@ class _ACFragmentState extends State<ACFragment> {
                             return Card(
                               child: GestureDetector(
                                 onTap: () {
-                                  Nav.push(UpdateCalendar(
+                                  Nav.push(updateCalendar(
                                     takeCalendar: scalendars[index],
                                     initDate: scalendars[index].day,
                                   ));

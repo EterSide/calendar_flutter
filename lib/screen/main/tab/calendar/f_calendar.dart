@@ -190,7 +190,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                                       .withOpacity(1.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  await Nav.push(UpdateCalendar(
+                                  await Nav.push(updateCalendar(
                                     takeCalendar: calendars[index],
                                     initDate: selectedDay,
                                   )).then((value) {
