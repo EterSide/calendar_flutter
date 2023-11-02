@@ -46,10 +46,13 @@ class _updateCalendarState extends State<updateCalendar> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '목표 작성',
+        title: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, selectedDate);
+          },
         ),
-        backgroundColor: Colors.lightBlue,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -109,16 +112,13 @@ class _updateCalendarState extends State<updateCalendar> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-
                                 // setState를 써야, 버튼을 누를떄 마다, 다시 빌드가 되면서, 컬러부분의 색상이 변경된다.
                                 setState(() {
-
-                                  if(categoryList[index].key == selectKey){
+                                  if (categoryList[index].key == selectKey) {
                                     selectKey = null;
                                   } else {
                                     selectKey = categoryList[index].key;
                                   }
-
                                 });
 
                                 print(selectKey);
@@ -175,36 +175,61 @@ class _updateCalendarState extends State<updateCalendar> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (selectedDate != null && selectKey == null) {
-                      calendarViewModel.updateCalendar(
-                          widget.takeCalendar.key,
-                          Calendar(
-                              day: selectedDate!,
-                              title: title.text,
-                              content: content.text));
-                    } else {
-                      calendarViewModel.updateCalendar(
-                          widget.takeCalendar.key,
-                          Calendar(
-                              day: selectedDate!,
-                              title: title.text,
-                              content: content.text,
-                              categoryId: selectKey!,
-                          ));
-                    }
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (selectedDate != null && selectKey == null) {
+                            calendarViewModel.updateCalendar(
+                                widget.takeCalendar.key,
+                                Calendar(
+                                    day: selectedDate!,
+                                    title: title.text,
+                                    content: content.text));
+                          } else {
+                            calendarViewModel.updateCalendar(
+                                widget.takeCalendar.key,
+                                Calendar(
+                                  day: selectedDate!,
+                                  title: title.text,
+                                  content: content.text,
+                                  categoryId: selectKey!,
+                                ));
+                          }
 
-                    Navigator.pop(context, selectedDate);
+                          Navigator.pop(context, selectedDate);
 
-                    print(
-                        'Added C ${DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day).toUtc()}');
-                  },
-                  child: Text('수정'),
-                ),
-              )
+                          print(
+                              'Added C ${DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day).toUtc()}');
+                        },
+                        child: Text('수정'),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          calendarViewModel.deleteCalendar(
+                              selectKey!, widget.takeCalendar);
+                          Navigator.pop(context, selectedDate);
+                        },
+                        child: Text('삭제'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),

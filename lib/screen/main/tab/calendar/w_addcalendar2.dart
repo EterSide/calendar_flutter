@@ -43,10 +43,13 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '목표 작성',
+        title: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, selectedDate);
+          },
         ),
-        backgroundColor: Colors.lightBlue,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(

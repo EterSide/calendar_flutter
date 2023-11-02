@@ -30,10 +30,9 @@ class _ACFragmentState extends State<ACFragment> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '목록',
-          style: TextStyle(color: Colors.white),
+          '카테고리 별 목록',
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.lightBlue,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -45,6 +44,7 @@ class _ACFragmentState extends State<ACFragment> {
               itemCount: categoryList.length,
               itemBuilder: (context, index) {
                 return Container(
+                  margin: EdgeInsets.only(left: 10),
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -74,6 +74,7 @@ class _ACFragmentState extends State<ACFragment> {
                     child: Row(
                       children: [
                         Container(
+                          margin: EdgeInsets.only(left: 10),
                           width: 20,
                           height: 30,
                           decoration: BoxDecoration(
@@ -94,6 +95,7 @@ class _ACFragmentState extends State<ACFragment> {
                       ],
                     ),
                   ),
+
                 );
               },
             ),
