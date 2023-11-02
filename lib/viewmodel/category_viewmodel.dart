@@ -1,7 +1,9 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/dart/extension/datetime_extension.dart';
+import 'package:fast_app_base/viewmodel/calendar_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 import '../model/calendar.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -49,14 +51,29 @@ class CategoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addCategory() async {
-    final category = Category(name: 'name', color: "#FFA07A");
-    final category1 = Category(name: 'name2', color: "#87CEFA");
-    final category2 = Category(name: 'name3', color: "#FFFF00");
+  Future<void> addCategory(Category category) async {
+    // final category = Category(name: 'name', color: "#FFA07A");
+    // final category1 = Category(name: 'name2', color: "#87CEFA");
+    // final category2 = Category(name: 'name3', color: "#FFFF00");
+    // await _CategoryBox.add(category);
+    // await _CategoryBox.add(category1);
+    // await _CategoryBox.add(category2);
     await _CategoryBox.add(category);
-    await _CategoryBox.add(category1);
-    await _CategoryBox.add(category2);
     await _loadCategory();
+  }
+
+  Future<void> deleteCategory(int key) async {
+    await _CategoryBox.delete(key);
+
+
+    await _loadCategory();
+    notifyListeners();
+  }
+
+  Future<void> updateCategory(int key, Category category) async {
+    await _CategoryBox.put(key, category);
+    await _loadCategory();
+    notifyListeners();
   }
 
 

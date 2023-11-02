@@ -35,9 +35,11 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
 
   @override
   Widget build(BuildContext context) {
+
     final categories = Provider.of<CategoryViewModel>(context);
     final categoryList = categories.categorys;
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -67,9 +69,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                   mode: CupertinoDatePickerMode.date,
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10,),
               Container(
                 height: 80,
                 child: TextField(
@@ -99,12 +99,10 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               //3항 연산자 써서 색깔 바꾸기
-                              color: selectKey == categoryList[index].key
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade200,
+                              color: selectKey == categoryList[index].key ? Colors.grey.shade400 : Colors.grey.shade200,
                             ),
                             child: GestureDetector(
-                              onTap: () {
+                              onTap: (){
                                 // setState를 써야, 버튼을 누를떄 마다, 다시 빌드가 되면서, 컬러부분의 색상이 변경된다.
                                 setState(() {
                                   selectKey = categoryList[index].key;
@@ -112,6 +110,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                                 });
 
                                 print(selectKey);
+
                               },
                               child: Row(
                                 children: [
@@ -121,13 +120,14 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                                     decoration: BoxDecoration(
                                       //DB에 저장된 색상 코드를 가져와서 변환하여 적용
                                       color: Color(int.parse(
-                                              categoryList[index]
-                                                  .color
-                                                  .replaceFirst("#", ""),
-                                              radix: 16))
+                                          categoryList[index]
+                                              .color
+                                              .replaceFirst("#", ""),
+                                          radix: 16))
                                           .withOpacity(1.0),
                                       shape: BoxShape.circle,
                                     ),
+
                                   ),
                                   SizedBox(
                                     width: 5,
@@ -137,6 +137,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                               ),
                             ),
                           ),
+
                         ],
                       ),
                     );
@@ -168,6 +169,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
               Container(
                 height: 50,
                 child: ElevatedButton(
+
                   onPressed: () {
                     if (selectedDate != null && selectKey != null) {
                       calendarViewModel.addCalendar(
@@ -176,7 +178,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                           day: selectedDate!,
                           title: title.text,
                           content: content.text,
-                          categoryId: categoryList[selectKey!].key,
+                          categoryId: selectKey!,
                         ),
                       );
                     } else {
