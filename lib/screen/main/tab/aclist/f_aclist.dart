@@ -109,6 +109,15 @@ class _ACFragmentState extends State<ACFragment> {
                       ? ListView.builder(
                           itemBuilder: (BuildContext context, index) {
                             return Card(
+                              color: acalendars[index].categoryId == -1
+                                  ? Colors.white
+                                  : Color(int.parse(
+                                  categories
+                                      .getColorFromCategoryKey(
+                                      acalendars[index].categoryId)
+                                      .replaceFirst("#", ""),
+                                  radix: 16))
+                                  .withOpacity(1.0),
                               child: GestureDetector(
                                 onTap: () {
                                   Nav.push(updateCalendar(
@@ -128,6 +137,15 @@ class _ACFragmentState extends State<ACFragment> {
                           itemCount: scalendars.length,
                           itemBuilder: (BuildContext context, index) {
                             return Card(
+                              color: scalendars[index].categoryId == -1
+                                  ? Colors.white
+                                  : Color(int.parse(
+                                  categories
+                                      .getColorFromCategoryKey(
+                                      scalendars[index].categoryId)
+                                      .replaceFirst("#", ""),
+                                  radix: 16))
+                                  .withOpacity(1.0),
                               child: GestureDetector(
                                 onTap: () {
                                   Nav.push(updateCalendar(
