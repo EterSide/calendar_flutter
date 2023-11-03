@@ -218,7 +218,7 @@ class _updateCalendarState extends State<updateCalendar> {
                       child: ElevatedButton(
                         onPressed: () {
                           calendarViewModel.deleteCalendar(
-                              selectKey!, widget.takeCalendar);
+                              widget.takeCalendar.key, widget.takeCalendar);
                           Navigator.pop(context, selectedDate);
                         },
                         child: Text('삭제'),
