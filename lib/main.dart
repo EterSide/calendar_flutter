@@ -38,7 +38,7 @@ void main() async {
             create: (_) => CalendarViewModel(),
           ),
           ChangeNotifierProvider(
-              create: (_) => CategoryViewModel(),
+            create: (_) => CategoryViewModel(),
           )
         ],
         child: const App(),

@@ -5,14 +5,14 @@ class FlutterLocalNotification {
   FlutterLocalNotification._();
 
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
   static init() async {
     AndroidInitializationSettings androidInitializationSettings =
-        const AndroidInitializationSettings('mipmap/ic_launcher');
+    const AndroidInitializationSettings('mipmap/ic_launcher');
 
     DarwinInitializationSettings darwinInitializationSettings =
-        const DarwinInitializationSettings(
+    const DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
@@ -27,18 +27,18 @@ class FlutterLocalNotification {
   }
 
   static requestPermissions()  {
-     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
   static Future<void> showNotification(String title,String body,DateTime dt) async {
     const AndroidNotificationDetails androidNotificationDetails =
-         AndroidNotificationDetails( 'channelId', 'channelName',
+    AndroidNotificationDetails( 'channelId', 'channelName',
       channelDescription: 'channelDescription',
       importance: Importance.max,
       priority: Priority.max,
@@ -55,7 +55,7 @@ class FlutterLocalNotification {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       uniqueId, title, body,tz.TZDateTime.from(dt, tz.local), notificationDetails,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 }
