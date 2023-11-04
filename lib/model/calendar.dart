@@ -16,6 +16,12 @@ class Calendar extends HiveObject {
   @HiveField(3)
   int categoryId;
 
+  @HiveField(4)
+  bool isDone = false;
+
+  @HiveField(5)
+  bool isAlarm = false;
+
   Calendar({
     required this.day,
     required this.title,

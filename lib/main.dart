@@ -1,5 +1,6 @@
 import 'package:alarm/alarm.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fast_app_base/common/notification.dart';
 import 'package:fast_app_base/viewmodel/calendar_viewmodel.dart';
 import 'package:fast_app_base/viewmodel/category_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'common/data/preference/app_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  FlutterLocalNotification.init();
+  Future.delayed(const Duration(seconds: 3),FlutterLocalNotification.requestPermissions());
   await CalendarViewModel.initializeHive();
   await CategoryViewModel.initializeHive();
   await EasyLocalization.ensureInitialized();
