@@ -200,7 +200,22 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                                   });
                                 },
                                 child: ListTile(
-                                  title: Text(calendars[index].title),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(calendars[index].title,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+
+                                      Text(calendars[index].day
+                                          .toString()
+                                          .substring(10, 16)),
+                                    ],
+                                  ),
+
                                 ),
                               ),
                             );

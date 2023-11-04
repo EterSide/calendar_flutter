@@ -71,7 +71,8 @@ class CalendarViewModel extends ChangeNotifier {
 
   Future<void> addCalendar(Calendar calendar) async {
     await _CalendarBox.add(Calendar(
-        day: DateTime(calendar.day.year, calendar.day.month, calendar.day.day),
+        day: DateTime(calendar.day.year, calendar.day.month, calendar.day.day,
+            calendar.day.hour, calendar.day.minute),
         title: calendar.title,
         content: calendar.content,
         categoryId: calendar.categoryId));

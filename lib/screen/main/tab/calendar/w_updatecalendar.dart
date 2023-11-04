@@ -29,7 +29,7 @@ class _updateCalendarState extends State<updateCalendar> {
   @override
   void initState() {
     super.initState();
-    selectedDate = widget.initDate;
+    selectedDate = widget.takeCalendar.day;
     selectKey = widget.takeCalendar.categoryId;
   }
 
@@ -37,6 +37,8 @@ class _updateCalendarState extends State<updateCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    print('update take cal = ${widget.takeCalendar.day}');
+    print('update take cal = ${widget.initDate}');
     final categories = Provider.of<CategoryViewModel>(context);
     final categoryList = categories.categorys;
     final calendarViewModel = Provider.of<CalendarViewModel>(context);
@@ -60,18 +62,112 @@ class _updateCalendarState extends State<updateCalendar> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
+              // Container(
+              //   height: 75,
+              //   child: CupertinoDatePicker(
+              //     minimumYear: DateTime.now().year,
+              //     maximumYear: DateTime.now().year + 1,
+              //     initialDateTime: widget.initDate,
+              //     onDateTimeChanged: (datetime) {
+              //       setState(() {
+              //         selectedDate = datetime;
+              //       });
+              //     },
+              //     mode: CupertinoDatePickerMode.date,
+              //   ),
+              // ),
+              SizedBox(
                 height: 75,
-                child: CupertinoDatePicker(
-                  minimumYear: DateTime.now().year,
-                  maximumYear: DateTime.now().year + 1,
-                  initialDateTime: widget.initDate,
-                  onDateTimeChanged: (datetime) {
-                    setState(() {
-                      selectedDate = datetime;
-                    });
-                  },
-                  mode: CupertinoDatePickerMode.date,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.white),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius:  BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            initialDate: widget.initDate,
+                            firstDate: DateTime.now().subtract( Duration(days: 365)),
+                            lastDate: DateTime.now().add(Duration(days: 2000)),
+                          );
+                          if (date != null) {
+                            setState(() {
+                              selectedDate = DateTime(
+                                date.year,
+                                date.month,
+                                date.day,
+                                selectedDate!.hour,
+                                selectedDate!.minute,
+                              );
+                            });
+                          }
+                        },
+                        child: Text(
+                          '${selectedDate!.year}년 ${selectedDate!.month}월 ${selectedDate!.day}일',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.white),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius:  BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay(
+                              hour: widget.takeCalendar!.day.hour,
+                              minute: widget.takeCalendar!.day.hour,
+                            ),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              selectedDate = DateTime(
+                                selectedDate!.year,
+                                selectedDate!.month,
+                                selectedDate!.day,
+                                time.hour,
+                                time.minute,
+                              );
+                            });
+                          }
+                        },
+                        child: Text(
+                          '${selectedDate!.hour}시 ${selectedDate!.minute}분',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
