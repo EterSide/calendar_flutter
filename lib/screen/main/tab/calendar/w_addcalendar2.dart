@@ -57,23 +57,123 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
+              // SizedBox(
+              //   height: 75,
+              //   child: CupertinoDatePicker(
+              //     minimumYear: DateTime.now().year,
+              //     maximumYear: DateTime.now().year + 1,
+              //     initialDateTime: widget.initDate,
+              //     onDateTimeChanged: (datetime) {
+              //       setState(() {
+              //         selectedDate = datetime;
+              //         print(selectedDate);
+              //       });
+              //     },
+              //     mode: CupertinoDatePickerMode.dateAndTime,
+              //   ),
+              // ),
+              // create date and time picker except for cupertinoDatePicker
+              SizedBox(
                 height: 75,
-                child: CupertinoDatePicker(
-                  minimumYear: DateTime.now().year,
-                  maximumYear: DateTime.now().year + 1,
-                  initialDateTime: widget.initDate,
-                  onDateTimeChanged: (datetime) {
-                    setState(() {
-                      selectedDate = datetime;
-                      print(selectedDate);
-                    });
-                  },
-                  mode: CupertinoDatePickerMode.date,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.white),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius:  BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            initialDate: widget.initDate,
+                            firstDate: DateTime.now().subtract( Duration(days: 365)),
+                            lastDate: DateTime.now().add(Duration(days: 2000)),
+                          );
+                          if (date != null) {
+                            setState(() {
+                              selectedDate = DateTime(
+                                date.year,
+                                date.month,
+                                date.day,
+                                selectedDate!.hour,
+                                selectedDate!.minute,
+                              );
+                            });
+                          }
+                        },
+                        child: Text(
+                          '${selectedDate!.year}년 ${selectedDate!.month}월 ${selectedDate!.day}일',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.white),
+                          shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius:  BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay(
+                              hour: selectedDate!.hour,
+                              minute: selectedDate!.minute,
+                            ),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              selectedDate = DateTime(
+                                selectedDate!.year,
+                                selectedDate!.month,
+                                selectedDate!.day,
+                                time.hour,
+                                time.minute,
+                              );
+                            });
+                          }
+                        },
+                        child: Text(
+                          '${selectedDate!.hour}시 ${selectedDate!.minute}분',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+
+
+
+
               SizedBox(height: 10,),
-              Container(
+              SizedBox(
                 height: 80,
                 child: TextField(
                   controller: title,
@@ -202,7 +302,7 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                     Navigator.pop(context, selectedDate);
 
                     print(
-                        'Added C ${DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day).toUtc()}');
+                        'Added C ${DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,selectedDate!.hour,selectedDate!.minute)}');
                   },
                   child: Text('등록'),
                 ),
