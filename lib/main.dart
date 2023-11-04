@@ -1,7 +1,9 @@
+import 'package:alarm/alarm.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fast_app_base/viewmodel/calendar_viewmodel.dart';
 import 'package:fast_app_base/viewmodel/category_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,9 @@ void main() async {
   await CategoryViewModel.initializeHive();
   await EasyLocalization.ensureInitialized();
   await AppPreferences.init();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await Alarm.init(showDebugLogs: true);
   await initializeDateFormatting();
 
   runApp(
