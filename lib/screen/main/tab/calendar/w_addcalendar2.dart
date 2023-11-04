@@ -2,10 +2,10 @@ import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/model/calendar.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/f_calendar.dart';
 import 'package:fast_app_base/viewmodel/calendar_viewmodel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/notification.dart';
 import '../../../../viewmodel/category_viewmodel.dart';
 import 'event.dart';
 
@@ -28,7 +28,10 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
   @override
   void initState() {
     super.initState();
-    selectedDate = widget.initDate;
+    FlutterLocalNotification.init();
+    Future.delayed(const Duration(seconds: 1),FlutterLocalNotification.requestPermissions());
+    selectedDate = DateTime(widget.initDate.year, widget.initDate.month,
+        widget.initDate.day, DateTime.now().hour, DateTime.now().minute);
   }
 
   //Map<DateTime, List<Event>> events = {};
@@ -139,8 +142,8 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                           final time = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay(
-                              hour: selectedDate!.hour,
-                              minute: selectedDate!.minute,
+                              hour: DateTime.now().hour,
+                              minute: DateTime.now().minute,
                             ),
                           );
                           if (time != null) {
@@ -300,6 +303,8 @@ class _AddCalendarPage2State extends State<AddCalendarPage2> {
                     // });
 
                     Navigator.pop(context, selectedDate);
+                    FlutterLocalNotification.showNotification(title.text, content.text, selectedDate!);
+
 
                     print(
                         'Added C ${DateTime(selectedDate!.year, selectedDate!.month, selectedDate!.day,selectedDate!.hour,selectedDate!.minute)}');

@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../../common/notification.dart';
 import '../../../../model/calendar.dart';
 import '../../../../model/category.dart';
 import '../../../../viewmodel/calendar_viewmodel.dart';
@@ -126,7 +127,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
 
                 eventLoader: (day) {
                   return calendarViewModel
-                          .events[DateTime(day.year, day.month, day.day)] ??
+                      .events[DateTime(day.year, day.month, day.day)] ??
                       [];
                 },
                 //eventLoader: _getCalendarsForDay,
@@ -150,10 +151,10 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                               decoration: BoxDecoration(
                                 //DB에 저장된 색상 코드를 가져와서 변환하여 적용
                                 color: Color(int.parse(
-                                        categoryList[index]
-                                            .color
-                                            .replaceFirst("#", ""),
-                                        radix: 16))
+                                    categoryList[index]
+                                        .color
+                                        .replaceFirst("#", ""),
+                                    radix: 16))
                                     .withOpacity(1.0),
                                 shape: BoxShape.circle,
                               ),
@@ -174,54 +175,54 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 child: Container(
                   child: calendars.length == 0
                       ? Center(
-                          child: Text("일정이 없습니다."),
-                        )
+                    child: Text("일정이 없습니다."),
+                  )
                       : ListView.builder(
-                          itemBuilder: (BuildContext context, index) {
-                            return Card(
-                              color: calendars[index].categoryId == -1
-                                  ? Colors.white
-                                  : Color(int.parse(
-                                          categories
-                                              .getColorFromCategoryKey(
-                                                  calendars[index].categoryId)
-                                              .replaceFirst("#", ""),
-                                          radix: 16))
-                                      .withOpacity(1.0),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await Nav.push(updateCalendar(
-                                    takeCalendar: calendars[index],
-                                    initDate: selectedDay,
-                                  )).then((value) {
-                                    setState(() {
-                                      selectedDay = value;
-                                    });
-                                  });
-                                },
-                                child: ListTile(
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(calendars[index].title,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),),
-
-                                      Text(calendars[index].day
-                                          .toString()
-                                          .substring(10, 16)),
-                                    ],
-                                  ),
-
-                                ),
-                              ),
-                            );
+                    itemBuilder: (BuildContext context, index) {
+                      return Card(
+                        color: calendars[index].categoryId == -1
+                            ? Colors.white
+                            : Color(int.parse(
+                            categories
+                                .getColorFromCategoryKey(
+                                calendars[index].categoryId)
+                                .replaceFirst("#", ""),
+                            radix: 16))
+                            .withOpacity(1.0),
+                        child: GestureDetector(
+                          onTap: () async {
+                            await Nav.push(updateCalendar(
+                              takeCalendar: calendars[index],
+                              initDate: selectedDay,
+                            )).then((value) {
+                              setState(() {
+                                selectedDay = value;
+                              });
+                            });
                           },
-                          itemCount: calendars.length,
+                          child: ListTile(
+                            title: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(calendars[index].title,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),),
+
+                                Text(calendars[index].day
+                                    .toString()
+                                    .substring(10, 16)),
+                              ],
+                            ),
+
+                          ),
                         ),
+                      );
+                    },
+                    itemCount: calendars.length,
+                  ),
                 ),
               ),
             ],
