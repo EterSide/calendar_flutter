@@ -50,8 +50,6 @@ class FlutterLocalNotification {
     );
 
     int uniqueId = (DateTime.now().millisecondsSinceEpoch / 1000).round();
-    print(dt);
-    print(tz.TZDateTime.from(dt, tz.local));
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       uniqueId, title, body,tz.TZDateTime.from(dt, tz.local), notificationDetails,

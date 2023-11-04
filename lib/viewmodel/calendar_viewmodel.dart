@@ -27,7 +27,7 @@ class CalendarViewModel extends ChangeNotifier {
 
   static Future<void> initializeHive() async {
     final appDocumentDir =
-        await path_provider.getApplicationDocumentsDirectory();
+    await path_provider.getApplicationDocumentsDirectory();
     Hive.init(appDocumentDir.path);
     Hive.registerAdapter(CalendarAdapter());
   }
@@ -56,9 +56,9 @@ class CalendarViewModel extends ChangeNotifier {
     DateTime now = DateTime.now();
     final calendarList = await _CalendarBox.values
         .where((element) =>
-            element.day.year == now.year &&
-            element.day.month == now.month &&
-            element.day.day == now.day)
+    element.day.year == now.year &&
+        element.day.month == now.month &&
+        element.day.day == now.day)
         .toList();
 
     print(calendarList);
@@ -117,9 +117,9 @@ class CalendarViewModel extends ChangeNotifier {
   Future<void> loadSelectedCalendars(DateTime day) async {
     final calendarList = await _CalendarBox.values
         .where((element) =>
-            element.day.year == day.year &&
-            element.day.month == day.month &&
-            element.day.day == day.day)
+    element.day.year == day.year &&
+        element.day.month == day.month &&
+        element.day.day == day.day)
         .toList();
     print('---------loadSelectedCalendars---------');
     print(calendarList);
@@ -135,16 +135,21 @@ class CalendarViewModel extends ChangeNotifier {
     final calendarList = await _CalendarBox.values.toList();
     Map<DateTime, List<Calendar>> aaa = {};
 
+    for(int i=0;i<calendarList.length;i++){
+      print('${i}번 ${calendarList[i].day}');
+    }
+
     for (int i = 0; i < calendarList.length; i++) {
       if (aaa.keysList().contains(DateTime(calendarList[i].day.year,
           calendarList[i].day.month, calendarList[i].day.day))) {
-        aaa[calendarList[i].day]?.add(calendarList[i]);
+        aaa[DateTime(calendarList[i].day.year, calendarList[i].day.month,
+            calendarList[i].day.day)]?.add(calendarList[i]);
       } else {
         aaa[DateTime(calendarList[i].day.year, calendarList[i].day.month,
             calendarList[i].day.day)] = [calendarList[i]];
       }
     }
-
+    print(aaa);
     _events = aaa;
     notifyListeners();
   }

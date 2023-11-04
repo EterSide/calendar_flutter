@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 class ExampleAlarmEditScreen extends StatefulWidget {
   final AlarmSettings? alarmSettings;
 
-  const ExampleAlarmEditScreen({Key? key, this.alarmSettings})
-      : super(key: key);
+const ExampleAlarmEditScreen({Key? key, this.alarmSettings})
+    : super(key: key);
 
-  @override
-  State<ExampleAlarmEditScreen> createState() => _ExampleAlarmEditScreenState();
+@override
+State<ExampleAlarmEditScreen> createState() => _ExampleAlarmEditScreenState();
 }
 
 class _ExampleAlarmEditScreenState extends State<ExampleAlarmEditScreen> {
