@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  alarm: 1.1.5
+
   #splash creator
   flutter_native_splash: ^2.3.0
 
@@ -122,6 +124,12 @@ flutter:
     - assets/image/darkmode/
     - assets/translations/
     - assets/
+    - assets/mozart.mp3
+    - assets/nokia.mp3
+    - assets/one_piece.mp3
+    - assets/star_wars.mp3
+    - assets/marimba.mp3
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
