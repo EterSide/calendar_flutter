@@ -23,13 +23,16 @@ class CalendarAdapter extends TypeAdapter<Calendar> {
       categoryId: fields[3] as int,
     )
       ..isDone = fields[4] as bool
-      ..isAlarm = fields[5] as bool;
+      ..isAlarm = fields[5] as bool
+      ..durationDay = fields[6] as int
+      ..notificationId = fields[7] as int
+      ..alarmId = fields[8] as int;
   }
 
   @override
   void write(BinaryWriter writer, Calendar obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.day)
       ..writeByte(1)
@@ -41,7 +44,13 @@ class CalendarAdapter extends TypeAdapter<Calendar> {
       ..writeByte(4)
       ..write(obj.isDone)
       ..writeByte(5)
-      ..write(obj.isAlarm);
+      ..write(obj.isAlarm)
+      ..writeByte(6)
+      ..write(obj.durationDay)
+      ..writeByte(7)
+      ..write(obj.notificationId)
+      ..writeByte(8)
+      ..write(obj.alarmId);
   }
 
   @override
