@@ -1,4 +1,5 @@
 import 'package:fast_app_base/common/common.dart';
+import 'package:fast_app_base/common/widget/w_round_button.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_addcalendar.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_addcalendar2.dart';
 import 'package:fast_app_base/screen/main/tab/calendar/w_updatecalendar.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../common/notification.dart';
+import '../../../../common/slideUpTransition.dart';
 import '../../../../model/calendar.dart';
 import '../../../../model/category.dart';
 import '../../../../viewmodel/calendar_viewmodel.dart';
@@ -23,6 +25,7 @@ class CalendarFragment extends StatefulWidget {
 
 class _CalendarFragmentState extends State<CalendarFragment> {
   Map<DateTime, List<Calendar>> events = {};
+
   //late final ValueNotifier<List<Event>> selectedEvents;
 
   // List<Object> _getCalendarsForDay(DateTime day){
@@ -60,21 +63,36 @@ class _CalendarFragmentState extends State<CalendarFragment> {
     final categoryList = categories.categorys;
 
     return Scaffold(
-      floatingActionButton: IconButton(
-        onPressed: () async {
-          await Nav.push(AddCalendarPage2(
-            initDate: selectedDay,
-          )).then((value) {
-            setState(() {
-              selectedDay = value;
-              calendarViewModel.loadSelectedCalendars(selectedDay);
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        child: IconButton(
+          onPressed: () async {
+            await Navigator.push(
+                context,
+                SlideUpTransition(
+                    page: AddCalendarPage2(
+                  initDate: selectedDay,
+                ))).then((value) {
+              setState(() {
+                selectedDay = value;
+                calendarViewModel.loadSelectedCalendars(selectedDay);
+              });
             });
-          });
-        },
-        icon: Icon(
-          Icons.add_circle_rounded,
-          size: 50,
-          color: Colors.blue,
+
+            // await Nav.push(AddCalendarPage2(
+            //   initDate: selectedDay,
+            // )).then((value) {
+            //   setState(() {
+            //     selectedDay = value;
+            //     calendarViewModel.loadSelectedCalendars(selectedDay);
+            //   });
+            // });
+          },
+          icon: Icon(
+            Icons.add_circle_rounded,
+            size: 50,
+            color: Colors.blue,
+          ),
         ),
       ),
       body: Container(
@@ -127,7 +145,7 @@ class _CalendarFragmentState extends State<CalendarFragment> {
 
                 eventLoader: (day) {
                   return calendarViewModel
-                      .events[DateTime(day.year, day.month, day.day)] ??
+                          .events[DateTime(day.year, day.month, day.day)] ??
                       [];
                 },
                 //eventLoader: _getCalendarsForDay,
@@ -151,10 +169,10 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                               decoration: BoxDecoration(
                                 //DB에 저장된 색상 코드를 가져와서 변환하여 적용
                                 color: Color(int.parse(
-                                    categoryList[index]
-                                        .color
-                                        .replaceFirst("#", ""),
-                                    radix: 16))
+                                        categoryList[index]
+                                            .color
+                                            .replaceFirst("#", ""),
+                                        radix: 16))
                                     .withOpacity(1.0),
                                 shape: BoxShape.circle,
                               ),
@@ -175,54 +193,55 @@ class _CalendarFragmentState extends State<CalendarFragment> {
                 child: Container(
                   child: calendars.length == 0
                       ? Center(
-                    child: Text("일정이 없습니다."),
-                  )
+                          child: Text("일정이 없습니다."),
+                        )
                       : ListView.builder(
-                    itemBuilder: (BuildContext context, index) {
-                      return Card(
-                        color: calendars[index].categoryId == -1
-                            ? Colors.white
-                            : Color(int.parse(
-                            categories
-                                .getColorFromCategoryKey(
-                                calendars[index].categoryId)
-                                .replaceFirst("#", ""),
-                            radix: 16))
-                            .withOpacity(1.0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            await Nav.push(updateCalendar(
-                              takeCalendar: calendars[index],
-                              initDate: selectedDay,
-                            )).then((value) {
-                              setState(() {
-                                selectedDay = value;
-                              });
-                            });
+                          itemBuilder: (BuildContext context, index) {
+                            return Card(
+                              color: calendars[index].categoryId == -1
+                                  ? Colors.white
+                                  : Color(int.parse(
+                                          categories
+                                              .getColorFromCategoryKey(
+                                                  calendars[index].categoryId)
+                                              .replaceFirst("#", ""),
+                                          radix: 16))
+                                      .withOpacity(1.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await Nav.push(updateCalendar(
+                                    takeCalendar: calendars[index],
+                                    initDate: selectedDay,
+                                  )).then((value) {
+                                    setState(() {
+                                      selectedDay = value;
+                                    });
+                                  });
+                                },
+                                child: ListTile(
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        calendars[index].title,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(calendars[index]
+                                          .day
+                                          .toString()
+                                          .substring(10, 16)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
                           },
-                          child: ListTile(
-                            title: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(calendars[index].title,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-
-                                Text(calendars[index].day
-                                    .toString()
-                                    .substring(10, 16)),
-                              ],
-                            ),
-
-                          ),
+                          itemCount: calendars.length,
                         ),
-                      );
-                    },
-                    itemCount: calendars.length,
-                  ),
                 ),
               ),
             ],
